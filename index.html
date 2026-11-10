@@ -176,6 +176,7 @@ body {
 .game-progress { font-family: 'Cinzel', serif; font-size: .75rem; color: var(--text-dim); }
 .game-progress span { color: var(--gold); }
 
+
 /* lifelines row */
 .lifelines { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .ll-btn {
@@ -330,6 +331,97 @@ body {
 }
 .btn-again:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(181,96,12,.55); }
 
+/* ======== WARMUP CARD ======== */
+.wu-badge {
+  display: inline-block; background: var(--saffron); color: #FFF8EE;
+  font-family: 'Cinzel', serif; font-size: .68rem; font-weight: 700;
+  padding: .28rem .9rem; border-radius: 20px; letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: .7rem;
+}
+.wu-card {
+  background: linear-gradient(135deg, #FFF8F0, #FFF0D4);
+  border: 2px dashed var(--saffron); border-radius: 16px;
+  padding: 1.2rem 1.3rem; margin-bottom: .9rem;
+  animation: popIn .3s ease-out;
+  box-shadow: 0 2px 16px rgba(200,56,0,.1);
+}
+.wu-qtext {
+  font-size: clamp(.88rem,2.4vw,1.05rem); font-weight: 700;
+  color: var(--text); line-height: 1.55; margin-bottom: 1rem;
+}
+.wu-opts { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: .9rem; }
+.wu-opt {
+  background: #FFF7EC; border: 2px solid rgba(200,56,0,.18);
+  border-radius: 10px; padding: .65rem .8rem;
+  color: var(--text); font-family: 'Nunito', sans-serif;
+  font-size: clamp(.76rem,1.9vw,.86rem); font-weight: 700;
+  cursor: pointer; text-align: left;
+  display: flex; align-items: center; gap: .45rem;
+  line-height: 1.3; transition: background .15s, border-color .15s;
+}
+.wu-opt:hover:not(:disabled):not(.wu-selected) { background: #FEE8C8; border-color: var(--saffron); }
+.wu-opt.wu-selected { background: rgba(200,56,0,.1); border-color: var(--saffron); }
+.wu-opt.wu-correct  { background: rgba(21,128,61,.12); border-color: var(--ok); color: #0a4a20; }
+.wu-opt.wu-wrong    { background: rgba(185,28,28,.1); border-color: var(--bad); color: #7f1010; }
+.wu-opt:disabled { cursor: default; }
+.wu-opt-lbl { font-family: 'Cinzel', serif; color: var(--saffron); font-size: .76rem; font-weight: 700; flex-shrink: 0; }
+.wu-opt.wu-selected .wu-opt-lbl { color: var(--saffron); }
+.wu-opt.wu-correct .wu-opt-lbl  { color: var(--ok); }
+.wu-opt.wu-wrong   .wu-opt-lbl  { color: var(--bad); }
+
+.wu-reveal {
+  background: rgba(200,56,0,.06); border: 1px solid rgba(200,56,0,.22);
+  border-radius: 10px; padding: .7rem 1rem; margin-bottom: .9rem;
+  animation: fadeUp .3s ease-out; text-align: center;
+}
+.wu-reveal-icon { font-size: 1.9rem; margin-bottom: .3rem; }
+.wu-reveal-msg  { font-size: .88rem; font-weight: 700; color: var(--text); line-height: 1.55; }
+
+.wu-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; }
+.wu-btn-reveal {
+  font-family: 'Cinzel', serif;
+  background: var(--saffron); color: #FFF8EE;
+  border: none; padding: .58rem 1.4rem; border-radius: 50px;
+  font-size: .86rem; font-weight: 700; cursor: pointer; transition: all .2s;
+}
+.wu-btn-reveal:disabled { opacity: .4; cursor: not-allowed; }
+.wu-btn-reveal:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(200,56,0,.3); }
+.wu-btn-go {
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(135deg, #8A4200, #E89010, #8A4200);
+  color: #FFF8EE; border: none; padding: .58rem 1.4rem; border-radius: 50px;
+  font-size: .86rem; font-weight: 700; cursor: pointer; transition: all .2s;
+}
+.wu-btn-go:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(181,96,12,.4); }
+
+/* ======== INTRO WARM-UP ROUND ======== */
+#intro-warmup {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-start;
+  padding: 2.5rem 1rem 2rem;
+}
+.iw-wrap { width: 100%; max-width: 580px; }
+.iw-header { text-align: center; margin-bottom: 1.5rem; }
+.iw-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.3rem,5vw,2rem); font-weight: 900; color: var(--saffron);
+  margin-bottom: .3rem;
+}
+.iw-subtitle { font-family: 'Cinzel', serif; font-size: .82rem; color: var(--text-dim); margin-bottom: .75rem; }
+.iw-progress {
+  display: inline-block; font-family: 'Cinzel', serif; font-size: .78rem;
+  color: #FFF8EE; background: var(--saffron); border-radius: 20px;
+  padding: .28rem 1.1rem; letter-spacing: .08em;
+}
+.iw-dots { display: flex; justify-content: center; gap: .55rem; margin-top: .65rem; }
+.iw-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(200,56,0,.18); transition: background .3s;
+}
+.iw-dot.done    { background: rgba(200,56,0,.45); }
+.iw-dot.current { background: var(--saffron); transform: scale(1.2); }
+
 /* Mobile adjustments */
 @media (max-width: 640px) {
   #game { flex-direction: column; }
@@ -344,6 +436,7 @@ body {
   .qnav-status { display: none; }
   .sidebar-score { margin-top: .5rem; padding-top: .5rem; display: flex; gap: 1rem; align-items: center; justify-content: center; text-align: left; }
   .opts-grid { grid-template-columns: 1fr; }
+  .wu-opts   { grid-template-columns: 1fr; }
   .q-main { padding: .9rem .75rem; }
 }
 </style>
@@ -357,15 +450,42 @@ body {
   <div class="welcome-card">
     <h2>🎆 How to Play</h2>
     <ul class="rules">
-      <li>10 questions listed on the left panel</li>
-      <li>Click any question to open it</li>
+      <li>Start with 3 warm-up questions — everyone plays!</li>
+      <li>Then 10 Diwali trivia questions on the left</li>
       <li>Select your answer, then hit Submit</li>
-      <li>Use 3 lifelines: 50:50, Call a Friend, Ask Audience</li>
-      <li>Each lifeline can only be used once</li>
+      <li>Each question has 3 lifelines: 50:50, Call Friend, Ask Audience</li>
       <li>Score as much happiness as you can!</li>
     </ul>
   </div>
   <button class="btn-play" onclick="startGame()">🎇 Start Quiz 🎇</button>
+</div>
+
+<!-- INTRO WARM-UP ROUND (shown to everyone before the main quiz) -->
+<div id="intro-warmup" class="screen">
+  <div class="iw-wrap">
+    <div class="iw-header">
+      <div class="iw-title">🎉 Warm-Up Round!</div>
+      <div class="iw-subtitle">Before the real quiz — let's have some fun together!</div>
+      <div class="iw-progress" id="iw-progress">Question 1 of 3</div>
+      <div class="iw-dots">
+        <div class="iw-dot current" id="iw-dot0"></div>
+        <div class="iw-dot" id="iw-dot1"></div>
+        <div class="iw-dot" id="iw-dot2"></div>
+      </div>
+    </div>
+    <div class="wu-card">
+      <div class="wu-qtext" id="iw-qtext"></div>
+      <div class="wu-opts" id="iw-opts"></div>
+      <div class="wu-reveal" id="iw-reveal" hidden>
+        <div class="wu-reveal-icon" id="iw-reveal-icon"></div>
+        <div class="wu-reveal-msg" id="iw-reveal-msg"></div>
+      </div>
+      <div class="wu-actions">
+        <button class="wu-btn-reveal" id="iw-btn-reveal" onclick="revealIntroWU()" disabled>See Answer 😄</button>
+        <button class="wu-btn-go" id="iw-btn-go" onclick="nextIntroWU()" hidden>Next Question →</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- GAME -->
@@ -530,16 +650,75 @@ const HAPPINESS = [
 
 const LABELS = ['A','B','C','D'];
 
+/* 3 intro warm-up questions shown to everyone before the main quiz */
+const INTRO_WU = [
+  { question:"☕ It is 11 PM on Diwali. Wife says 'I'm not angry, I'm just tired.' Husband knows this means:",
+    options:["She is genuinely just tired, nothing to worry about","She is angry AND tired — a deadly combination","Something happened 6 hours ago that he has completely forgotten","B and C, and also he should not ask 'What happened?'"],
+    correctAnswer:3,
+    punchline:"'What happened?' is the wrong question. The right answer is to bring chai, sit quietly, and hope for the best. ☕" },
+  { question:"🎬 Why did Gabbar Singh never have a girlfriend?",
+    options:["He lived in a ravine in Chambal — not ideal for dating","His opening line on every first date was 'Kitne aadmi the?'","He had a ₹50,000 bounty on his head, which is a difficult thing to explain","All of the above, but mainly B"],
+    correctAnswer:3,
+    punchline:"He also laughed for 45 seconds before every conversation and asked strangers if they were scared of him. The dating pool was understandably small. 😂" },
+  { question:"🐢 When the Rabbit lost the race to the Tortoise, what was his wife's immediate reaction when he got home?",
+    options:["'I told you not to take a nap, but you never listen to me!'","'So you can run fast when leaving the house, but when I ask for groceries, you turn into the Tortoise?'","'The Tortoise's wife carries their entire house on her back, and you can't even carry two bags of carrots!'","All of the above, delivered in a single 45-minute un-skippable lecture."],
+    correctAnswer:3,
+    punchline:"The lecture covered the race, the nap, 14 previous incidents, three hypothetical future failures, and ended with 'This is exactly what your mother warned me about.' 🐢" }
+];
+
+const WARMUP = [
+  { question:"🚗 Wife is getting ready for the Diwali party. Husband says 'Take your time.' He actually means:",
+    options:["Take all the time you need, darling","Please hurry, we are already late","I have been sitting in the car for 25 minutes","I have eaten the snacks meant for the party"],
+    correctAnswer:2,
+    punchline:"He has been in the car since before she even started her eye makeup. The engine has been turned on and off three times. 🚗" },
+  { question:"😬 Husband buys wife a pressure cooker as a Diwali gift. She smiles. That smile means:",
+    options:["She genuinely loves it, very practical!","She is making a detailed mental note","This is going in the next argument, with full context","B and C, simultaneously, forever"],
+    correctAnswer:3,
+    punchline:"The pressure cooker will be referenced in arguments for the next 11 years. It is not a gift. It is evidence. 😬" },
+  { question:"🧹 Wife asks husband to help with Diwali cleaning. His contribution is:",
+    options:["Full deep cleaning of the entire house","Moving the sofa once and asking 'Is this good?' every 4 minutes","Supervising while eating chakli","Disappearing to buy something 'important' and returning after everything is done"],
+    correctAnswer:3,
+    punchline:"He left for milk. He came back 3 hours later. The house was spotless. He said 'Wow you cleaned fast!' 🧹" },
+  { question:"📱 Your in-laws are arriving for Diwali. Husband says 'Relax, it'll be fine.' He means:",
+    options:["He has a detailed plan to help manage the visit","He will greet them warmly and handle conversation","He has not thought about it even once","He will be on his phone in the other room within 7 minutes of their arrival"],
+    correctAnswer:3,
+    punchline:"He said 'it'll be fine' and then immediately found a very urgent cricket score to check. 📱" },
+  { question:"🪔 Wife says 'We need to talk' right as the Diwali puja starts. Husband:",
+    options:["Pauses everything and listens attentively","Says 'Yes of course, after puja, 2 minutes'","Suddenly becomes extremely devoted to lighting every single diya personally","Discovers an urgent phone call he must take outside"],
+    correctAnswer:2,
+    punchline:"He has never shown this level of religious dedication in his entire life. Every diya perfectly placed. Full focus. 🪔" },
+  { question:"⚡ Husband is asked by wife: 'Does this lehenga look good?' The correct answer is:",
+    options:["'Yes, beautiful!'","'The blue one looked better'","'Yes, beautiful!' — but said immediately, before she finishes the sentence","Any answer other than B"],
+    correctAnswer:2,
+    punchline:"Speed is everything. Hesitation means you considered another answer. There is no recovering from hesitation. ⚡" },
+  { question:"☕ It is 11 PM on Diwali. Wife says 'I'm not angry, I'm just tired.' Husband knows this means:",
+    options:["She is genuinely just tired, nothing to worry about","She is angry AND tired — a deadly combination","Something happened 6 hours ago that he has completely forgotten","B and C, and also he should not ask 'What happened?'"],
+    correctAnswer:3,
+    punchline:"'What happened?' is the wrong question. The right answer is to bring chai, sit quietly, and hope for the best. ☕" },
+  { question:"💍 Wife hinted about a gold necklace for Diwali for three weeks. Husband gives her:",
+    options:["The exact necklace she showed him four times","A 'surprise' — earrings, completely different","A gift card 'so she can choose what she likes'","A very heartfelt card saying 'you are my everything'"],
+    correctAnswer:2,
+    punchline:"He thought the gift card showed emotional intelligence. It showed he saw all four hints and filed them directly into the bin. 💍" },
+  { question:"🏏 Husband is meeting wife's extended family at the Diwali party. His survival strategy is:",
+    options:["Confidently introduce himself and make conversation","Stay close to wife at all times as human shield","Learn everyone's names in advance to impress","Find one uncle who likes cricket and not leave his side all evening"],
+    correctAnswer:3,
+    punchline:"The cricket uncle is a lifeline. He will talk for 2 hours without asking about salary, children, or property. A true refuge. 🏏" },
+  { question:"😴 End of the Diwali party. Wife is saying bye to everyone. This process takes:",
+    options:["5 minutes, she is very efficient","15–20 minutes, perfectly normal","45 minutes minimum — there are multiple goodbye rounds","Long enough for husband to fall asleep in the car, wake up, and she is still saying bye"],
+    correctAnswer:3,
+    punchline:"The first goodbye was at 10:30 PM. It is now 11:45 PM. She is on her fourth final goodbye. He has accepted his fate. 😴" }
+];
+
 /* ===== STATE ===== */
 let G = {};
 
 function freshState() {
   return {
-    currentQ: -1,
-    answers:  Array(10).fill(null),  // selected option index (null = not picked)
-    revealed: Array(10).fill(false), // whether submit was clicked
-    gone:     Array(10).fill(null).map(()=>[]), // 50:50 eliminated per question
-    ll:       Array(10).fill(null).map(()=>({ f50:true, cf:true, aa:true })) // per-question lifelines
+    currentQ:   -1,
+    answers:    Array(10).fill(null),
+    revealed:   Array(10).fill(false),
+    gone:       Array(10).fill(null).map(()=>[]),
+    ll:         Array(10).fill(null).map(()=>({ f50:true, cf:true, aa:true }))
   };
 }
 
@@ -557,10 +736,80 @@ function freshState() {
 })();
 
 /* ===== START ===== */
+let IW_idx = 0, IW_pick = null;
+
 function startGame() {
   G = freshState();
-  buildSidebar();
-  show('game');
+  IW_idx = 0; IW_pick = null;
+  showIntroWUQ(0);
+  show('intro-warmup');
+}
+
+function showIntroWUQ(idx) {
+  const wu = INTRO_WU[idx];
+  IW_pick = null;
+
+  document.getElementById('iw-progress').textContent = `Question ${idx+1} of 3`;
+  for (let i=0; i<3; i++) {
+    const dot = document.getElementById('iw-dot'+i);
+    dot.className = 'iw-dot';
+    if (i < idx) dot.classList.add('done');
+    else if (i === idx) dot.classList.add('current');
+  }
+
+  document.getElementById('iw-qtext').textContent = wu.question;
+  const optsEl = document.getElementById('iw-opts');
+  optsEl.innerHTML = '';
+  wu.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'wu-opt';
+    btn.id = 'iwo' + i;
+    btn.onclick = () => pickIntroWU(i);
+    btn.innerHTML = `<span class="wu-opt-lbl">${LABELS[i]}</span><span>${opt}</span>`;
+    optsEl.appendChild(btn);
+  });
+
+  document.getElementById('iw-reveal').hidden = true;
+  const revBtn = document.getElementById('iw-btn-reveal');
+  revBtn.disabled = true; revBtn.hidden = false;
+  document.getElementById('iw-btn-go').hidden = true;
+}
+
+function pickIntroWU(oi) {
+  IW_pick = oi;
+  for (let i=0; i<4; i++) {
+    const b = document.getElementById('iwo'+i);
+    if (b) b.classList.toggle('wu-selected', i===oi);
+  }
+  document.getElementById('iw-btn-reveal').disabled = false;
+}
+
+function revealIntroWU() {
+  const wu = INTRO_WU[IW_idx];
+  for (let i=0; i<4; i++) {
+    const b = document.getElementById('iwo'+i);
+    if (!b) continue;
+    b.disabled = true;
+    if (i === wu.correctAnswer) b.classList.add('wu-correct');
+    else if (i === IW_pick)     b.classList.add('wu-wrong');
+  }
+  document.getElementById('iw-reveal-icon').textContent = (IW_pick === wu.correctAnswer) ? '😂' : '🤭';
+  document.getElementById('iw-reveal-msg').textContent  = wu.punchline;
+  document.getElementById('iw-reveal').hidden    = false;
+  document.getElementById('iw-btn-reveal').hidden = true;
+  const goBtn = document.getElementById('iw-btn-go');
+  goBtn.hidden = false;
+  goBtn.textContent = IW_idx < 2 ? 'Next Question →' : '🎇 Now the REAL Quiz! →';
+}
+
+function nextIntroWU() {
+  IW_idx++;
+  if (IW_idx < 3) {
+    showIntroWUQ(IW_idx);
+  } else {
+    buildSidebar();
+    show('game');
+  }
 }
 
 function buildSidebar() {
@@ -619,6 +868,10 @@ function refreshTopbar() {
 /* ===== OPEN QUESTION ===== */
 function openQ(qi) {
   G.currentQ = qi;
+  showActualQ(qi);
+}
+
+function showActualQ(qi) {
   const q = QS[qi];
 
   document.getElementById('q-empty').hidden   = true;
@@ -685,6 +938,7 @@ function openQ(qi) {
   // Animate card
   const c = document.getElementById('qcard');
   c.style.animation = 'none'; c.offsetHeight; c.style.animation = '';
+
 }
 
 /* ===== SELECT OPTION ===== */
@@ -738,6 +992,7 @@ function submitAnswer() {
 
   refreshSidebar();
   refreshTopbar();
+
 
   // Check if all answered
   const allDone = G.revealed.every(Boolean);
@@ -825,7 +1080,13 @@ function smallBurst() {
 
 /* ===== UTILS ===== */
 function resetGame() { startGame(); window.scrollTo(0,0); }
-function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.style.display = '';
+}
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
 </script>
