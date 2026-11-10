@@ -1,0 +1,831 @@
+<title>Kaun Banega Diwali Pati</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:       #FDF4E3;
+  --bg-card:  #FFFBF0;
+  --bg-card2: #FEF0CC;
+  --gold:     #B5600C;
+  --gold-dim: #8A4200;
+  --gold-lt:  #E89010;
+  --saffron:  #C83800;
+  --cream:    #2A1000;
+  --text:     #2A1000;
+  --text-dim: #7A4518;
+  --ok:       #15803D;
+  --bad:      #B91C1C;
+  --opt-bg:   #FFF7EC;
+  --opt-bdr:  #D4A060;
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; overflow-x: hidden; }
+body {
+  padding-left:  max(16px, env(safe-area-inset-left,  0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* floating diyas */
+#diya-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.diya { position: absolute; opacity: 0; animation: riseDiya linear infinite; }
+@keyframes riseDiya {
+  0%   { transform: translateY(105vh); opacity: 0; }
+  10%  { opacity: .22; }
+  90%  { opacity: .22; }
+  100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -300% center; }
+  100% { background-position:  300% center; }
+}
+@keyframes glow {
+  0%,100% { box-shadow: 0 2px 20px rgba(181,96,12,.15), 0 0 30px rgba(200,56,0,.08); }
+  50%     { box-shadow: 0 4px 36px rgba(181,96,12,.32), 0 0 50px rgba(200,56,0,.18); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes bounceTyping {
+  0%,80%,100% { transform: translateY(0);   opacity: .4; }
+  40%          { transform: translateY(-7px); opacity: 1; }
+}
+
+/* screens */
+.screen { display: none; position: relative; z-index: 1; }
+.screen.active { display: block; }
+
+/* ======== WELCOME ======== */
+#welcome {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; gap: 1.5rem; padding: 2.5rem 0;
+}
+.logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.5rem, 6vw, 3rem); font-weight: 900; line-height: 1.2;
+  background: linear-gradient(120deg, #5C2200, #B5600C, #E89010, #B5600C, #5C2200);
+  background-size: 300% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+.logo-sub { font-family: 'Cinzel', serif; color: var(--saffron); font-size: clamp(.75rem,2.5vw,.95rem); letter-spacing: .2em; text-transform: uppercase; }
+.welcome-card {
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-card2));
+  border: 2px solid var(--gold-dim); border-radius: 20px;
+  padding: 1.75rem 1.5rem; max-width: 500px; width: 100%;
+  box-shadow: 0 4px 32px rgba(181,96,12,.12);
+  animation: glow 3s ease-in-out infinite;
+}
+.welcome-card h2 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.1rem; margin-bottom: .9rem; }
+.rules { list-style: none; color: var(--text-dim); font-size: .9rem; line-height: 2.1; text-align: left; }
+.rules li::before { content: '🪔  '; }
+.btn-play {
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(135deg, #8A4200, #E89010, #8A4200);
+  color: #FFF8EE; border: none; padding: .95rem 3rem; border-radius: 50px;
+  font-size: 1.15rem; font-weight: 700; cursor: pointer; letter-spacing: .1em; text-transform: uppercase;
+  box-shadow: 0 4px 24px rgba(181,96,12,.4); transition: transform .2s, box-shadow .2s;
+}
+.btn-play:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 36px rgba(181,96,12,.55); }
+.btn-play:active { transform: scale(.97); }
+
+/* ======== GAME LAYOUT ======== */
+#game {
+  min-height: 100vh;
+  display: flex; align-items: stretch; gap: 0;
+}
+
+/* --- Left sidebar: question list --- */
+.q-sidebar {
+  width: 220px; flex-shrink: 0;
+  background: #FEF0CC;
+  border-right: 2px solid rgba(181,96,12,.2);
+  display: flex; flex-direction: column;
+  padding: 1rem .5rem 1.5rem;
+  min-height: 100vh;
+}
+.sidebar-title {
+  font-family: 'Cinzel', serif; font-size: .7rem;
+  color: var(--gold-dim); letter-spacing: .12em; text-transform: uppercase;
+  text-align: center; margin-bottom: .75rem; padding-bottom: .5rem;
+  border-bottom: 1px solid rgba(181,96,12,.25);
+}
+.q-nav-list { display: flex; flex-direction: column; gap: .35rem; flex: 1; }
+.qnav-item {
+  display: flex; align-items: center; gap: .55rem;
+  padding: .55rem .6rem; border-radius: 10px;
+  cursor: pointer; transition: background .15s, border-color .15s;
+  border: 1px solid transparent;
+}
+.qnav-item:hover { background: rgba(181,96,12,.08); border-color: rgba(181,96,12,.3); }
+.qnav-item.active { background: rgba(181,96,12,.14); border-color: var(--gold); }
+.qnav-item.correct { border-color: rgba(34,197,94,.4); background: rgba(34,197,94,.07); }
+.qnav-item.wrong   { border-color: rgba(239,68,68,.4); background: rgba(239,68,68,.07); }
+
+.qnav-num {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 700;
+  background: var(--opt-bg); border: 2px solid var(--opt-bdr); color: var(--text-dim);
+  transition: all .2s;
+}
+.qnav-item.active  .qnav-num { background: rgba(181,96,12,.18); border-color: var(--gold); color: var(--gold-dim); }
+.qnav-item.correct .qnav-num { background: rgba(34,197,94,.2);  border-color: var(--ok);  color: var(--ok); }
+.qnav-item.wrong   .qnav-num { background: rgba(239,68,68,.18); border-color: var(--bad); color: var(--bad); }
+
+.qnav-info { flex: 1; min-width: 0; }
+.qnav-cat  { font-size: .62rem; color: var(--saffron); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qnav-hap  { font-size: .68rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qnav-item.correct .qnav-hap { color: var(--ok); }
+.qnav-item.wrong   .qnav-hap { color: var(--bad); }
+.qnav-status { font-size: .9rem; flex-shrink: 0; }
+
+/* happiness score at bottom of sidebar */
+.sidebar-score {
+  margin-top: auto; padding-top: .75rem;
+  border-top: 1px solid rgba(181,96,12,.22);
+  text-align: center;
+}
+.ss-label { font-size: .62rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .25rem; }
+.ss-val   { font-family: 'Cinzel', serif; font-size: .85rem; color: var(--gold); font-weight: 700; line-height: 1.4; }
+
+/* --- Main question area --- */
+.q-main {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+  padding: 1.25rem 1rem;
+}
+
+/* game top bar */
+.game-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.25rem; padding-bottom: .75rem;
+  border-bottom: 1px solid rgba(181,96,12,.2);
+}
+.game-brand { font-family: 'Cinzel Decorative', serif; font-size: .75rem; color: var(--gold); }
+.game-progress { font-family: 'Cinzel', serif; font-size: .75rem; color: var(--text-dim); }
+.game-progress span { color: var(--gold); }
+
+/* lifelines row */
+.lifelines { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.ll-btn {
+  flex: 1; min-width: 72px;
+  background: #FFF7EC; border: 2px solid rgba(181,96,12,.35);
+  border-radius: 10px; padding: .45rem .3rem;
+  color: var(--gold-dim); cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-size: .68rem; font-weight: 800; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: .15rem;
+  transition: all .2s;
+}
+.ll-btn:hover:not(:disabled) { background: #FEE8C8; border-color: var(--gold); }
+.ll-btn:disabled { opacity: .3; cursor: not-allowed; border-color: rgba(100,60,0,.15); color: var(--text-dim); text-decoration: line-through; }
+.ll-icon { font-size: 1.15rem; }
+
+/* empty state */
+.q-empty {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 1rem; text-align: center; padding: 2rem;
+  color: var(--text-dim);
+  animation: fadeUp .4s ease-out;
+}
+.q-empty-icon { font-size: 3.5rem; opacity: .5; }
+.q-empty h3 { font-family: 'Cinzel', serif; color: var(--gold-dim); font-size: 1.1rem; }
+.q-empty p  { font-size: .88rem; }
+
+/* question card */
+.qcard {
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-card2));
+  border: 2px solid var(--opt-bdr); border-radius: 16px;
+  padding: 1.3rem 1.4rem; margin-bottom: .9rem;
+  box-shadow: 0 2px 16px rgba(181,96,12,.1);
+  animation: popIn .3s ease-out;
+}
+.qcard.revealed-correct { border-color: var(--ok); }
+.qcard.revealed-wrong   { border-color: var(--bad); }
+
+.qcat { font-size: .67rem; color: var(--saffron); text-transform: uppercase; letter-spacing: .15em; font-weight: 800; margin-bottom: .3rem; }
+.qnum-row { font-family: 'Cinzel', serif; font-size: .72rem; color: var(--gold-dim); margin-bottom: .5rem; }
+.qtext { font-size: clamp(.9rem,2.5vw,1.1rem); font-weight: 700; line-height: 1.55; color: var(--cream); }
+
+/* options */
+.opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: .9rem; }
+.opt-btn {
+  background: var(--opt-bg); border: 2px solid var(--opt-bdr); border-radius: 10px;
+  padding: .75rem .85rem; color: var(--text); font-family: 'Nunito', sans-serif;
+  font-size: clamp(.78rem,2vw,.92rem); font-weight: 700;
+  cursor: pointer; text-align: left;
+  display: flex; align-items: center; gap: .5rem;
+  line-height: 1.3; transition: background .15s, border-color .15s, transform .1s;
+}
+.opt-btn:hover:not(:disabled):not(.selected) { background: #FEE8C8; border-color: var(--gold); transform: translateY(-1px); }
+.opt-btn:active:not(:disabled) { transform: none; }
+.opt-btn:disabled { cursor: default; }
+.opt-lbl { font-family: 'Cinzel', serif; color: var(--gold-dim); font-size: .82rem; font-weight: 700; flex-shrink: 0; width: 1.3rem; }
+.opt-btn.selected  { background: rgba(181,96,12,.12); border-color: var(--gold); }
+.opt-btn.selected .opt-lbl { color: var(--gold-dim); }
+.opt-btn.gone { opacity: .1; pointer-events: none; }
+.opt-btn.reveal-correct { background: rgba(21,128,61,.12) !important; border-color: var(--ok) !important; color: #0a4a20; }
+.opt-btn.reveal-correct .opt-lbl { color: var(--ok); }
+.opt-btn.reveal-wrong   { background: rgba(185,28,28,.1) !important; border-color: var(--bad) !important; color: #7f1010; }
+.opt-btn.reveal-wrong .opt-lbl   { color: var(--bad); }
+
+/* submit + fun fact */
+.submit-row { display: flex; justify-content: flex-end; }
+.btn-submit {
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(135deg, #8A4200, #E89010, #8A4200);
+  color: #FFF8EE; border: none; padding: .7rem 2rem; border-radius: 50px;
+  font-size: .92rem; font-weight: 700; cursor: pointer; letter-spacing: .07em;
+  box-shadow: 0 4px 18px rgba(181,96,12,.35); transition: all .2s;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 7px 26px rgba(181,96,12,.5); }
+.btn-submit:active { transform: scale(.97); }
+.btn-submit:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.fun-fact {
+  margin-top: .85rem; padding: .8rem 1rem;
+  background: rgba(200,56,0,.06); border: 1px solid rgba(200,56,0,.22);
+  border-radius: 10px; display: none; animation: fadeUp .3s ease-out;
+}
+.ff-label { font-size: .62rem; color: var(--saffron); text-transform: uppercase; letter-spacing: .12em; font-weight: 800; margin-bottom: .3rem; }
+.ff-text  { font-size: .84rem; color: var(--text-dim); line-height: 1.6; }
+
+/* next button */
+.next-row { display: flex; justify-content: flex-end; margin-top: .75rem; }
+.btn-next {
+  background: rgba(181,96,12,.1); border: 2px solid var(--gold);
+  color: var(--gold-dim); border-radius: 50px; padding: .6rem 1.75rem;
+  font-family: 'Cinzel', serif; font-size: .88rem; font-weight: 700;
+  cursor: pointer; display: none; transition: all .2s;
+}
+.btn-next:hover { background: rgba(181,96,12,.18); border-color: var(--gold-dim); }
+
+/* ======== MODALS ======== */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(80,30,0,.5); z-index: 200;
+  align-items: center; justify-content: center;
+  padding: 1rem; backdrop-filter: blur(6px);
+}
+.overlay.open { display: flex; }
+.modal {
+  background: linear-gradient(135deg, #FFFBF0, #FEF0D0);
+  border: 2px solid var(--gold); border-radius: 20px;
+  padding: 1.75rem 1.5rem; max-width: 460px; width: 100%;
+  animation: popIn .3s ease-out; box-shadow: 0 8px 60px rgba(181,96,12,.25);
+}
+.modal h3 { font-family: 'Cinzel', serif; color: var(--gold-dim); text-align: center; font-size: 1.1rem; margin-bottom: 1rem; }
+.modal-close {
+  display: block; margin: 1.3rem auto 0;
+  background: linear-gradient(135deg, #8A4200, #E89010, #8A4200); color: #FFF8EE;
+  border: none; padding: .55rem 2rem; border-radius: 50px;
+  font-weight: 800; cursor: pointer; font-family: 'Cinzel', serif; font-size: .88rem;
+}
+
+/* simple modal content */
+.simple-modal-body { text-align: center; padding: .5rem 0 .25rem; }
+.simple-modal-icon { font-size: 3rem; margin-bottom: .75rem; }
+.simple-modal-text { font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.5; }
+
+/* ======== RESULT SCREEN ======== */
+#result {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; gap: 1.1rem; padding: 2.5rem 1rem;
+}
+.r-icon  { font-size: 4rem; }
+.r-title { font-family: 'Cinzel Decorative', serif; font-size: clamp(1.4rem,5vw,2.4rem); font-weight: 900; color: var(--gold); text-wrap: balance; line-height: 1.2; }
+.r-sub   { font-family: 'Cinzel', serif; color: var(--saffron); font-size: .95rem; }
+.r-card  {
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-card2));
+  border: 2px solid var(--gold); border-radius: 20px;
+  padding: 1.75rem; max-width: 380px; width: 100%;
+  box-shadow: 0 4px 32px rgba(181,96,12,.15);
+  animation: glow 3s ease-in-out infinite;
+}
+.r-score-label { color: var(--text-dim); font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .4rem; }
+.r-score { font-family: 'Cinzel', serif; font-size: clamp(2rem,8vw,3.2rem); font-weight: 700; color: var(--gold); }
+.r-hap { color: var(--saffron); font-weight: 700; margin-top: .4rem; font-size: .9rem; }
+.r-breakdown { margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; color: var(--text-dim); font-size: .82rem; }
+.r-breakdown span { font-weight: 800; }
+.r-breakdown .ok { color: var(--ok); }
+.r-breakdown .bad { color: var(--bad); }
+.btn-again {
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(135deg, #8A4200, #E89010, #8A4200);
+  color: #FFF8EE; border: none; padding: .85rem 2.5rem; border-radius: 50px;
+  font-size: 1rem; font-weight: 700; cursor: pointer; letter-spacing: .1em;
+  box-shadow: 0 4px 22px rgba(181,96,12,.4); transition: transform .2s, box-shadow .2s;
+}
+.btn-again:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(181,96,12,.55); }
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  #game { flex-direction: column; }
+  .q-sidebar {
+    width: 100%; min-height: auto; flex-direction: column;
+    border-right: none; border-bottom: 2px solid rgba(181,96,12,.2);
+    padding: .75rem .5rem;
+  }
+  .q-nav-list { flex-direction: row; flex-wrap: wrap; gap: .4rem; }
+  .qnav-item  { flex-direction: column; gap: .2rem; padding: .4rem .5rem; min-width: 52px; align-items: center; }
+  .qnav-info  { display: none; }
+  .qnav-status { display: none; }
+  .sidebar-score { margin-top: .5rem; padding-top: .5rem; display: flex; gap: 1rem; align-items: center; justify-content: center; text-align: left; }
+  .opts-grid { grid-template-columns: 1fr; }
+  .q-main { padding: .9rem .75rem; }
+}
+</style>
+
+<div id="diya-bg"></div>
+
+<!-- WELCOME -->
+<div id="welcome" class="screen active">
+  <div class="logo">🪔 Kaun Banega<br>Diwali Pati 🪔</div>
+  <div class="logo-sub">Diwali Special Quiz • 10 Questions</div>
+  <div class="welcome-card">
+    <h2>🎆 How to Play</h2>
+    <ul class="rules">
+      <li>10 questions listed on the left panel</li>
+      <li>Click any question to open it</li>
+      <li>Select your answer, then hit Submit</li>
+      <li>Use 3 lifelines: 50:50, Call a Friend, Ask Audience</li>
+      <li>Each lifeline can only be used once</li>
+      <li>Score as much happiness as you can!</li>
+    </ul>
+  </div>
+  <button class="btn-play" onclick="startGame()">🎇 Start Quiz 🎇</button>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <!-- Left sidebar -->
+  <div class="q-sidebar">
+    <div class="sidebar-title">🪔 Questions</div>
+    <div class="q-nav-list" id="q-nav-list"></div>
+    <div class="sidebar-score">
+      <div class="ss-label">Happiness Earned</div>
+      <div class="ss-val" id="ss-val">Select a question!</div>
+    </div>
+  </div>
+
+  <!-- Main area -->
+  <div class="q-main">
+    <!-- Top bar -->
+    <div class="game-topbar">
+      <div class="game-brand">🪔 KBDP</div>
+      <div class="game-progress"><span id="gp-done">0</span> / 10 answered</div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="q-empty" id="q-empty">
+      <div class="q-empty-icon">🪔</div>
+      <h3>Select a Question</h3>
+      <p>Click any question from the panel on the left to begin.</p>
+    </div>
+
+    <!-- Question content (hidden until question selected) -->
+    <div id="q-content" hidden>
+      <!-- Lifelines — fresh set for every question -->
+      <div class="lifelines">
+        <button class="ll-btn" id="ll-50" onclick="use5050()"><span class="ll-icon">✂️</span>50:50</button>
+        <button class="ll-btn" id="ll-cf" onclick="useCallFriend()"><span class="ll-icon">📞</span>Call Friend</button>
+        <button class="ll-btn" id="ll-aa" onclick="useAskAudience()"><span class="ll-icon">👥</span>Ask Audience</button>
+      </div>
+
+      <div class="qcard" id="qcard">
+        <div class="qcat" id="qcat"></div>
+        <div class="qnum-row" id="qnum-row"></div>
+        <div class="qtext" id="qtext"></div>
+      </div>
+
+      <div class="opts-grid" id="opts-grid">
+        <button class="opt-btn" id="o0" onclick="selectOpt(0)"><span class="opt-lbl">A</span><span id="ot0"></span></button>
+        <button class="opt-btn" id="o1" onclick="selectOpt(1)"><span class="opt-lbl">B</span><span id="ot1"></span></button>
+        <button class="opt-btn" id="o2" onclick="selectOpt(2)"><span class="opt-lbl">C</span><span id="ot2"></span></button>
+        <button class="opt-btn" id="o3" onclick="selectOpt(3)"><span class="opt-lbl">D</span><span id="ot3"></span></button>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn-submit" id="btn-submit" onclick="submitAnswer()">Submit Answer ✨</button>
+      </div>
+
+      <div class="fun-fact" id="fun-fact">
+        <div class="ff-label">🌟 Fun Fact</div>
+        <div class="ff-text" id="ff-text"></div>
+      </div>
+
+      <div class="next-row">
+        <button class="btn-next" id="btn-next" onclick="goNext()">Next Question →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <div class="r-icon" id="r-icon">🏆</div>
+  <div class="r-title" id="r-title">Diwali Champion!</div>
+  <div class="r-sub" id="r-sub"></div>
+  <div class="r-card">
+    <div class="r-score-label">Your Score</div>
+    <div class="r-score" id="r-score">0 / 10</div>
+    <div class="r-hap" id="r-hap"></div>
+    <div class="r-breakdown">
+      <div>✅ Correct: <span class="ok" id="r-ok">0</span></div>
+      <div>❌ Wrong: <span class="bad" id="r-bad">0</span></div>
+      <div>⬜ Skipped: <span id="r-skip">0</span></div>
+    </div>
+  </div>
+  <button class="btn-again" onclick="resetGame()">🪔 Play Again 🪔</button>
+</div>
+
+<!-- Modal: Call a Friend -->
+<div class="overlay" id="m-call">
+  <div class="modal">
+    <h3>📞 Call a Friend</h3>
+    <div class="simple-modal-body">
+      <div class="simple-modal-icon">📱</div>
+      <p class="simple-modal-text">Call your most knowledgeable friend!</p>
+    </div>
+    <button class="modal-close" onclick="closeModal('m-call')">Got it! 👍</button>
+  </div>
+</div>
+
+<!-- Modal: Ask the Audience -->
+<div class="overlay" id="m-aud">
+  <div class="modal">
+    <h3>👥 Ask the Audience</h3>
+    <div class="simple-modal-body">
+      <div class="simple-modal-icon">🎉</div>
+      <p class="simple-modal-text">Ask your party people, or check with the audience!</p>
+    </div>
+    <button class="modal-close" onclick="closeModal('m-aud')">Got it! 🙏</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.2/confetti.browser.min.js"></script>
+
+<script>
+/* ===== DATA ===== */
+const QS = [
+  { id:1, category:"Mythology",
+    question:"Which goddess is primarily worshipped on the main night of Diwali?",
+    options:["Goddess Durga","Goddess Saraswati","Goddess Lakshmi","Goddess Kali"], correctAnswer:2,
+    funFact:"Lakshmi, goddess of wealth, is said to visit only homes that are well-lit and clean on Diwali night — which is why we light diyas and clean every corner of the house!" },
+  { id:2, category:"Language",
+    question:"What does the Sanskrit word 'Deepavali' literally mean?",
+    options:["Row of lamps","Festival of colors","Night of sweets","Time of victory"], correctAnswer:0,
+    funFact:"'Deepavali' = 'deepa' (lamp) + 'avali' (row). It literally means a row of lamps — describing the beautiful trail of diyas lit all across India!" },
+  { id:3, category:"Ramayana",
+    question:"In the Ramayana, Diwali marks the return of which king to Ayodhya after 14 years of exile?",
+    options:["King Dasharatha","King Bharata","Lord Rama","King Vibhishana"], correctAnswer:2,
+    funFact:"Citizens of Ayodhya lit thousands of oil lamps to welcome Lord Rama home after his 14-year exile and his legendary victory over Ravana. This tradition continues to this day!" },
+  { id:4, category:"Sweets & Food",
+    question:"Which beloved Diwali sweet is made from tiny fried gram flour balls called 'boondi'?",
+    options:["Gulab Jamun","Motichoor Ladoo","Kalakand","Rasgulla"], correctAnswer:1,
+    funFact:"Motichoor Ladoo gets its name from 'moti' (pearl) + 'choor' (crushed) — tiny pearl-like boondi pressed into balls. It is one of India's most iconic Diwali sweets!" },
+  { id:5, category:"Mythology",
+    question:"Diwali also celebrates Krishna's victory over which demon, remembered on Narak Chaturdashi?",
+    options:["Mahishasura","Narakasura","Hiranyakashyap","Bali Maharaj"], correctAnswer:1,
+    funFact:"Narak Chaturdashi (the day before Diwali) celebrates Krishna and Satyabhama's victory over Narakasura, who had imprisoned 16,000 people. It's also called Choti Diwali!" },
+  { id:6, category:"Pop Culture",
+    question:"Which card game is traditionally played on Diwali night across India?",
+    options:["Rummy","Teen Patti","Poker","Flush"], correctAnswer:1,
+    funFact:"Goddess Parvati played dice with Lord Shiva on Diwali night and declared that whoever plays games of chance on this night will prosper all year — giving everyone a great excuse!" },
+  { id:7, category:"Mythology",
+    question:"What does 'Govardhan Puja', the day after Diwali, commemorate?",
+    options:["Krishna lifting Govardhan Hill to protect villagers from Indra's floods","Rama's royal coronation in Ayodhya","Birth of Goddess Lakshmi from the cosmic ocean","Ganesha's victory over the demon Gajasura"], correctAnswer:0,
+    funFact:"Lord Krishna lifted the entire Govardhan Hill on his little finger for 7 days to shelter people from Indra's floods — showing that devotion to nature beats fear of gods!" },
+  { id:8, category:"Regional Traditions",
+    question:"Which state celebrates 'Kali Puja' instead of Lakshmi Puja on the night of Diwali?",
+    options:["Rajasthan","West Bengal","Tamil Nadu","Kerala"], correctAnswer:1,
+    funFact:"West Bengal, Odisha, and Assam worship Goddess Kali on Diwali night. Kolkata's Kali Puja is world-famous — with spectacular pandals lit up across the entire city!" },
+  { id:9, category:"Traditions",
+    question:"What is the first day of the five-day Diwali festival called, when people buy gold for good luck?",
+    options:["Dhanteras","Naraka Chaturdashi","Kartik Amavasya","Bhai Dooj"], correctAnswer:0,
+    funFact:"Dhanteras (Dhan = wealth, Teras = 13th) falls two days before Diwali. Buying gold or silver utensils is considered extremely auspicious — it's the busiest day for jewellers in India!" },
+  { id:10, category:"History & Religion",
+    question:"In Jain tradition, Diwali marks the nirvana (liberation) of which Tirthankara in 527 BCE?",
+    options:["Rishabhanatha (Adinatha)","Neminatha","Lord Mahavira","Parshvanatha"], correctAnswer:2,
+    funFact:"For Jains, Diwali is their holiest festival — commemorating Lord Mahavira's achievement of moksha. His disciples lit lamps to dispel spiritual darkness, creating the very first Diwali!" }
+];
+
+const HAPPINESS = [
+  "1 Happy Thought 🌟","10 Happy Thoughts ✨","1 Sparkle of Joy 💫","10 Sparkles 🎇",
+  "1 Diwali Glow 🪔","10 Diwali Glows 🎆","1 Bucket of Bliss 🥰","10 Buckets of Bliss 😍",
+  "Near Nirvana 🕉️","INFINITE HAPPINESS 🏆🎆"
+];
+
+const LABELS = ['A','B','C','D'];
+
+/* ===== STATE ===== */
+let G = {};
+
+function freshState() {
+  return {
+    currentQ: -1,
+    answers:  Array(10).fill(null),  // selected option index (null = not picked)
+    revealed: Array(10).fill(false), // whether submit was clicked
+    gone:     Array(10).fill(null).map(()=>[]), // 50:50 eliminated per question
+    ll:       Array(10).fill(null).map(()=>({ f50:true, cf:true, aa:true })) // per-question lifelines
+  };
+}
+
+/* ===== INIT DIYAS ===== */
+(function() {
+  const bg = document.getElementById('diya-bg');
+  const syms = ['🪔','✨','🌟','💫','🎇'];
+  for (let i=0; i<16; i++) {
+    const d = document.createElement('div');
+    d.className = 'diya';
+    d.textContent = syms[i%syms.length];
+    d.style.cssText = `left:${Math.random()*100}%;font-size:${1+Math.random()*1.5}rem;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*18}s;`;
+    bg.appendChild(d);
+  }
+})();
+
+/* ===== START ===== */
+function startGame() {
+  G = freshState();
+  buildSidebar();
+  show('game');
+}
+
+function buildSidebar() {
+  const list = document.getElementById('q-nav-list');
+  list.innerHTML = '';
+  QS.forEach((q,i) => {
+    const item = document.createElement('div');
+    item.className = 'qnav-item';
+    item.id = 'nav'+i;
+    item.onclick = () => openQ(i);
+    item.innerHTML = `
+      <div class="qnav-num" id="navnum${i}">${i+1}</div>
+      <div class="qnav-info">
+        <div class="qnav-cat">${q.category}</div>
+        <div class="qnav-hap" id="navhap${i}">${HAPPINESS[i]}</div>
+      </div>
+      <div class="qnav-status" id="navst${i}">•</div>
+    `;
+    list.appendChild(item);
+  });
+  refreshSidebar();
+  refreshTopbar();
+}
+
+function refreshSidebar() {
+  QS.forEach((_,i) => {
+    const item   = document.getElementById('nav'+i);
+    const status = document.getElementById('navst'+i);
+    item.className = 'qnav-item';
+    if (i === G.currentQ) item.classList.add('active');
+    else if (G.revealed[i]) {
+      const correct = G.answers[i] === QS[i].correctAnswer;
+      item.classList.add(correct ? 'correct' : 'wrong');
+      status.textContent = correct ? '✓' : '✗';
+    } else if (G.answers[i] !== null) {
+      item.style.borderColor = 'rgba(255,215,0,.25)';
+      status.textContent = '◉';
+    } else {
+      status.textContent = '•';
+    }
+  });
+
+  // happiness score in sidebar
+  const correct = G.revealed.filter((r,i)=>r && G.answers[i]===QS[i].correctAnswer).length;
+  const ssEl = document.getElementById('ss-val');
+  if (correct === 0) ssEl.textContent = 'Answer correctly to earn!';
+  else if (correct === 10) ssEl.textContent = 'INFINITE HAPPINESS! 🎆';
+  else ssEl.textContent = HAPPINESS[correct - 1];
+}
+
+function refreshTopbar() {
+  const done = G.revealed.filter(Boolean).length;
+  document.getElementById('gp-done').textContent = done;
+}
+
+/* ===== OPEN QUESTION ===== */
+function openQ(qi) {
+  G.currentQ = qi;
+  const q = QS[qi];
+
+  document.getElementById('q-empty').hidden   = true;
+  document.getElementById('q-content').hidden = false;
+
+  // Question text
+  document.getElementById('qcat').textContent     = q.category;
+  document.getElementById('qnum-row').textContent  = `Question ${qi+1} of 10 — ${HAPPINESS[qi]}`;
+  document.getElementById('qtext').textContent     = q.question;
+
+  // Options
+  for (let i=0;i<4;i++) {
+    const btn = document.getElementById('o'+i);
+    document.getElementById('ot'+i).textContent = q.options[i];
+    btn.className = 'opt-btn';
+    btn.disabled  = false;
+
+    if (G.revealed[qi]) {
+      // already answered — show revealed state, disable all
+      btn.disabled = true;
+      if (i === q.correctAnswer) btn.classList.add('reveal-correct');
+      else if (i === G.answers[qi]) btn.classList.add('reveal-wrong');
+    } else {
+      // not yet revealed
+      if (G.gone[qi].includes(i)) { btn.classList.add('gone'); btn.disabled=true; }
+      else if (G.answers[qi] === i) btn.classList.add('selected');
+    }
+  }
+
+  // Card border
+  const card = document.getElementById('qcard');
+  card.className = 'qcard';
+  if (G.revealed[qi]) {
+    card.classList.add(G.answers[qi]===q.correctAnswer ? 'revealed-correct' : 'revealed-wrong');
+  }
+
+  // Submit button
+  const submitBtn = document.getElementById('btn-submit');
+  if (G.revealed[qi]) {
+    submitBtn.textContent = 'Already Answered ✓';
+    submitBtn.disabled = true;
+  } else {
+    submitBtn.textContent = 'Submit Answer ✨';
+    submitBtn.disabled = G.answers[qi] === null;
+  }
+
+  // Fun fact
+  const ff = document.getElementById('fun-fact');
+  if (G.revealed[qi]) {
+    document.getElementById('ff-text').textContent = q.funFact;
+    ff.style.display = 'block';
+  } else {
+    ff.style.display = 'none';
+  }
+
+  // Next button
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.style.display = (G.revealed[qi] && qi < 9) ? 'inline-block' : 'none';
+
+  // Lifelines
+  updateLL();
+  refreshSidebar();
+
+  // Animate card
+  const c = document.getElementById('qcard');
+  c.style.animation = 'none'; c.offsetHeight; c.style.animation = '';
+}
+
+/* ===== SELECT OPTION ===== */
+function selectOpt(oi) {
+  const qi = G.currentQ;
+  if (qi<0 || G.revealed[qi]) return;
+  if (G.gone[qi].includes(oi)) return;
+
+  G.answers[qi] = oi;
+  for (let i=0;i<4;i++) {
+    document.getElementById('o'+i).classList.toggle('selected', i===oi);
+  }
+  document.getElementById('btn-submit').disabled = false;
+  refreshSidebar(); // show dot updated
+}
+
+/* ===== SUBMIT ===== */
+function submitAnswer() {
+  const qi = G.currentQ;
+  if (qi<0 || G.revealed[qi] || G.answers[qi]===null) return;
+
+  G.revealed[qi] = true;
+  const q = QS[qi];
+  const userAns = G.answers[qi];
+  const correct  = q.correctAnswer;
+
+  // Update option styles
+  for (let i=0;i<4;i++) {
+    const btn = document.getElementById('o'+i);
+    btn.disabled = true;
+    btn.classList.remove('selected');
+    if (i===correct) btn.classList.add('reveal-correct');
+    else if (i===userAns && userAns!==correct) btn.classList.add('reveal-wrong');
+  }
+
+  // Card border
+  const card = document.getElementById('qcard');
+  card.classList.add(userAns===correct ? 'revealed-correct' : 'revealed-wrong');
+
+  // Fun fact
+  document.getElementById('ff-text').textContent = q.funFact;
+  document.getElementById('fun-fact').style.display = 'block';
+
+  // Submit button
+  const submitBtn = document.getElementById('btn-submit');
+  submitBtn.textContent = 'Already Answered ✓';
+  submitBtn.disabled = true;
+
+  // Next button
+  if (qi < 9) document.getElementById('btn-next').style.display = 'inline-block';
+
+  refreshSidebar();
+  refreshTopbar();
+
+  // Check if all answered
+  const allDone = G.revealed.every(Boolean);
+  if (allDone) setTimeout(showResult, 1200);
+  else if (userAns===correct) setTimeout(()=>smallBurst(), 200);
+}
+
+function goNext() {
+  const qi = G.currentQ;
+  if (qi < 9) openQ(qi+1);
+}
+
+/* ===== LIFELINES ===== */
+function updateLL() {
+  if (G.currentQ < 0) return;
+  const ll = G.ll[G.currentQ];
+  document.getElementById('ll-50').disabled = !ll.f50;
+  document.getElementById('ll-cf').disabled  = !ll.cf;
+  document.getElementById('ll-aa').disabled  = !ll.aa;
+}
+
+function use5050() {
+  const qi = G.currentQ;
+  if (qi<0 || !G.ll[qi].f50 || G.revealed[qi]) return;
+  G.ll[qi].f50 = false;
+  const ca = QS[qi].correctAnswer;
+  const wrong = [0,1,2,3].filter(i=>i!==ca && !G.gone[qi].includes(i));
+  wrong.sort(()=>Math.random()-.5).slice(0,2).forEach(i=>{
+    G.gone[qi].push(i);
+    const btn = document.getElementById('o'+i);
+    btn.classList.add('gone'); btn.disabled=true;
+    if (G.answers[qi]===i) { G.answers[qi]=null; document.getElementById('btn-submit').disabled=true; }
+  });
+  updateLL();
+}
+
+function useCallFriend() {
+  const qi = G.currentQ;
+  if (qi<0 || !G.ll[qi].cf || G.revealed[qi]) return;
+  G.ll[qi].cf = false; updateLL();
+  openModal('m-call');
+}
+
+function useAskAudience() {
+  const qi = G.currentQ;
+  if (qi<0 || !G.ll[qi].aa || G.revealed[qi]) return;
+  G.ll[qi].aa = false; updateLL();
+  openModal('m-aud');
+}
+
+/* ===== RESULT ===== */
+function showResult() {
+  const correct = G.revealed.filter((r,i)=>r&&G.answers[i]===QS[i].correctAnswer).length;
+  const wrong   = G.revealed.filter((r,i)=>r&&G.answers[i]!==QS[i].correctAnswer).length;
+  const skipped = 10-G.revealed.filter(Boolean).length;
+  const pct = correct/10;
+
+  let icon, title, sub;
+  if (pct===1)      { icon='🏆'; title='Perfect Score! Diwali Champion!'; sub='INFINITE HAPPINESS unlocked! 🎆🎆🎆'; }
+  else if (pct>=.8) { icon='🌟'; title='Excellent Job!'; sub='Lakshmi is smiling at you! ✨'; }
+  else if (pct>=.6) { icon='🪔'; title='Great Effort!'; sub='Keep the diya burning bright! 🪔'; }
+  else if (pct>=.4) { icon='😄'; title='Not Bad!'; sub='More Diwali celebrations needed! 🎇'; }
+  else              { icon='😊'; title='A Valiant Try!'; sub='Light more diyas and try again! 🕯️'; }
+
+  document.getElementById('r-icon').textContent  = icon;
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-sub').textContent   = sub;
+  document.getElementById('r-score').textContent = `${correct} / 10`;
+  document.getElementById('r-hap').textContent   = correct>0 ? HAPPINESS[Math.min(correct-1,9)] : 'Start your happiness journey! 🌟';
+  document.getElementById('r-ok').textContent    = correct;
+  document.getElementById('r-bad').textContent   = wrong;
+  document.getElementById('r-skip').textContent  = skipped;
+
+  show('result');
+  if (pct>=.7) setTimeout(()=>{
+    const c=['#FFD700','#FF8C00','#FF4500','#FFF3A3','#FFAA00'];
+    confetti({particleCount:150,spread:85,origin:{y:.55},colors:c});
+    if(pct===1) setTimeout(()=>{confetti({particleCount:100,angle:60,spread:55,origin:{x:0},colors:c});confetti({particleCount:100,angle:120,spread:55,origin:{x:1},colors:c});},400);
+  }, 300);
+}
+
+function smallBurst() {
+  confetti({particleCount:40,spread:50,origin:{y:.6},colors:['#FFD700','#FF8C00','#FFF3A3']});
+}
+
+/* ===== UTILS ===== */
+function resetGame() { startGame(); window.scrollTo(0,0); }
+function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+</script>
