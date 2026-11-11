@@ -1303,7 +1303,21 @@ function showResult() {
 }
 
 function smallBurst() {
-  confetti({particleCount:40,spread:50,origin:{y:.6},colors:['#FFD700','#FF8C00','#FFF3A3']});
+  const c = ['#FFD700','#FF8C00','#FF4500','#FFF3A3','#FFAA00','#FF69B4','#E89010'];
+  /* centre burst */
+  confetti({ particleCount:90, spread:70, origin:{x:.5,y:.6}, colors:c, startVelocity:48, ticks:220, gravity:.85 });
+  /* left cannon */
+  setTimeout(()=>{
+    confetti({ particleCount:65, angle:65, spread:52, origin:{x:0,y:.75}, colors:c, startVelocity:55, ticks:200 });
+  }, 180);
+  /* right cannon */
+  setTimeout(()=>{
+    confetti({ particleCount:65, angle:115, spread:52, origin:{x:1,y:.75}, colors:c, startVelocity:55, ticks:200 });
+  }, 360);
+  /* trailing shower from top */
+  setTimeout(()=>{
+    confetti({ particleCount:50, spread:100, origin:{x:.5,y:.2}, colors:c, startVelocity:20, ticks:280, gravity:1 });
+  }, 550);
 }
 
 /* ===== UTILS ===== */
