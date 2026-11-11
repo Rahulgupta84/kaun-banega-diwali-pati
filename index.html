@@ -68,49 +68,50 @@ body {
   height: 100vh; overflow: hidden;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  text-align: center; gap: .55rem; padding: .6rem 0;
+  text-align: center; gap: .8rem; padding: .8rem 0;
 }
 .logo {
   font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1.3rem, 4vw, 2rem); font-weight: 900; line-height: 1.2;
+  font-size: clamp(1.4rem, 3.6vw, 2.6rem); font-weight: 900; line-height: 1.2;
+  white-space: nowrap;
   background: linear-gradient(120deg, #5C2200, #B5600C, #E89010, #B5600C, #5C2200);
   background-size: 300% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: shimmer 4s linear infinite;
 }
-.logo-sub { font-family: 'Cinzel', serif; color: var(--saffron); font-size: clamp(.65rem,1.8vw,.85rem); letter-spacing: .18em; text-transform: uppercase; }
+.logo-sub { font-family: 'Cinzel', serif; color: var(--saffron); font-size: clamp(.8rem,2vw,1rem); letter-spacing: .2em; text-transform: uppercase; }
 .welcome-mid {
   display: flex; align-items: center; justify-content: center;
-  gap: 1.4rem; width: 100%; max-width: 740px; flex-wrap: wrap;
+  gap: 1.6rem; width: 100%; max-width: 780px; flex-wrap: wrap;
 }
 .welcome-card {
-  flex: 1; min-width: 260px; max-width: 420px;
+  flex: 1; min-width: 280px; max-width: 440px;
   background: linear-gradient(135deg, var(--bg-card), var(--bg-card2));
   border: 2px solid var(--gold-dim); border-radius: 20px;
-  padding: 1.1rem 1.3rem;
+  padding: 1.4rem 1.6rem;
   box-shadow: 0 4px 32px rgba(181,96,12,.12);
   animation: glow 3s ease-in-out infinite;
 }
-.welcome-card h2 { font-family: 'Cinzel', serif; color: var(--gold); font-size: .95rem; margin-bottom: .5rem; }
-.rules { list-style: none; color: var(--text-dim); font-size: .8rem; line-height: 1.8; text-align: left; }
+.welcome-card h2 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.1rem; margin-bottom: .7rem; }
+.rules { list-style: none; color: var(--text-dim); font-size: .9rem; line-height: 2; text-align: left; }
 .rules li::before { content: '🪔  '; }
 .btn-play {
   font-family: 'Cinzel', serif;
   background: linear-gradient(135deg, #8A4200, #E89010, #8A4200);
-  color: #FFF8EE; border: none; padding: .75rem 2.5rem; border-radius: 50px;
-  font-size: 1.05rem; font-weight: 700; cursor: pointer; letter-spacing: .1em; text-transform: uppercase;
+  color: #FFF8EE; border: none; padding: .9rem 2.8rem; border-radius: 50px;
+  font-size: 1.15rem; font-weight: 700; cursor: pointer; letter-spacing: .1em; text-transform: uppercase;
   box-shadow: 0 4px 24px rgba(181,96,12,.4); transition: transform .2s, box-shadow .2s;
 }
 .btn-play:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 36px rgba(181,96,12,.55); }
 .btn-play:active { transform: scale(.97); }
 
 /* host photo */
-.host-photo-wrap { display: flex; flex-direction: column; align-items: center; gap: .5rem; flex-shrink: 0; }
+.host-photo-wrap { display: flex; flex-direction: column; align-items: center; gap: .55rem; flex-shrink: 0; }
 .host-photo-frame {
-  width: 155px; height: 190px;
+  width: 175px; height: 215px;
   border-radius: 50%;
   border: 4px solid var(--gold-lt);
-  box-shadow: 0 0 0 3px rgba(181,96,12,.18), 0 0 24px rgba(232,144,16,.4);
+  box-shadow: 0 0 0 3px rgba(181,96,12,.18), 0 0 28px rgba(232,144,16,.45);
   overflow: hidden;
 }
 .host-photo {
@@ -120,7 +121,7 @@ body {
 }
 .host-label {
   font-family: 'Cinzel', serif; color: var(--gold);
-  font-size: .82rem; font-weight: 700; letter-spacing: .06em;
+  font-size: .9rem; font-weight: 700; letter-spacing: .07em;
 }
 
 /* ======== GAME LAYOUT ======== */
@@ -513,7 +514,7 @@ body {
 
 <!-- WELCOME -->
 <div id="welcome" class="screen active">
-  <div class="logo">🪔 Kaun Banega<br>Diwali Pati 🪔</div>
+  <div class="logo">🪔 Kaun Banega Diwali Pati 🪔</div>
   <div class="logo-sub">Diwali Special Quiz • 10 Questions</div>
   <div class="welcome-mid">
   <div class="host-photo-wrap">
