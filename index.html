@@ -223,15 +223,20 @@ body {
 .ll-btn:disabled { opacity: .28; cursor: not-allowed; text-decoration: line-through; }
 .ll-icon { font-size: .95rem; }
 
-/* ===== TIMER ===== */
+/* ===== TIMER (fixed right panel) ===== */
 .timer-wrap {
-  display: flex; align-items: center; gap: 14px;
+  position: fixed; right: 1.2rem; top: 50%; transform: translateY(-50%);
+  z-index: 50;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
   background: var(--bg-card2); border: 2px solid var(--opt-bdr);
-  border-radius: 14px; padding: 10px 16px; margin-bottom: 1rem;
+  border-radius: 18px; padding: 14px 10px; width: 112px;
+  box-shadow: 0 4px 24px rgba(181,96,12,.2);
 }
 .timer-wrap.time-up { border-color: var(--bad); animation: timerFlash .4s ease-in-out 3; }
 @keyframes timerFlash { 0%,100%{background:var(--bg-card2)} 50%{background:#FFE0E0} }
-.timer-ring-wrap { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+/* display:contents makes timer-info transparent — children flow into timer-wrap flex */
+.timer-info { display: contents; }
+.timer-ring-wrap { order: 2; position: relative; width: 72px; height: 72px; flex-shrink: 0; }
 .timer-ring { width: 72px; height: 72px; transform: rotate(-90deg); }
 .timer-track { fill: none; stroke: var(--opt-bdr); stroke-width: 7; opacity: .4; }
 .timer-arc {
@@ -247,12 +252,12 @@ body {
 }
 .timer-label.warning { color: #E05000; }
 .timer-label.danger  { color: var(--bad); }
-.timer-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.timer-title { font-family: 'Cinzel', serif; font-size: .82rem; font-weight: 700; color: var(--gold-dim); letter-spacing: .04em; }
-.timer-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.timer-title { order: 1; font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 700; color: var(--gold-dim); letter-spacing: .04em; text-align: center; }
+.timer-btns { order: 3; display: flex; flex-direction: column; gap: 6px; width: 100%; }
 .timer-btn {
-  background: var(--bg-card); border: 2px solid var(--opt-bdr);
-  border-radius: 8px; padding: 5px 14px; font-size: .82rem; font-weight: 700;
+  width: 100%; text-align: center;
+  background: var(--bg-card); border: 1.5px solid var(--opt-bdr);
+  border-radius: 8px; padding: 5px 6px; font-size: .75rem; font-weight: 700;
   color: var(--gold-dim); cursor: pointer; font-family: 'Nunito', sans-serif;
   transition: background .15s, border-color .15s;
 }
