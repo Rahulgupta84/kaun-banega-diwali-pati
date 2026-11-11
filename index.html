@@ -192,6 +192,42 @@ body {
 .ll-btn:disabled { opacity: .3; cursor: not-allowed; border-color: rgba(100,60,0,.15); color: var(--text-dim); text-decoration: line-through; }
 .ll-icon { font-size: 1.15rem; }
 
+/* ===== TIMER ===== */
+.timer-wrap {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg-card2); border: 2px solid var(--opt-bdr);
+  border-radius: 14px; padding: 10px 16px; margin-bottom: 1rem;
+}
+.timer-wrap.time-up { border-color: var(--bad); animation: timerFlash .4s ease-in-out 3; }
+@keyframes timerFlash { 0%,100%{background:var(--bg-card2)} 50%{background:#FFE0E0} }
+.timer-ring-wrap { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+.timer-ring { width: 72px; height: 72px; transform: rotate(-90deg); }
+.timer-track { fill: none; stroke: var(--opt-bdr); stroke-width: 7; opacity: .4; }
+.timer-arc {
+  fill: none; stroke: var(--gold-lt); stroke-width: 7;
+  stroke-dasharray: 226.2; stroke-dashoffset: 0;
+  stroke-linecap: round; transition: stroke-dashoffset .9s linear, stroke .4s;
+}
+.timer-arc.warning { stroke: #E05000; }
+.timer-arc.danger  { stroke: var(--bad); }
+.timer-label {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold);
+}
+.timer-label.warning { color: #E05000; }
+.timer-label.danger  { color: var(--bad); }
+.timer-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.timer-title { font-family: 'Cinzel', serif; font-size: .82rem; font-weight: 700; color: var(--gold-dim); letter-spacing: .04em; }
+.timer-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.timer-btn {
+  background: var(--bg-card); border: 2px solid var(--opt-bdr);
+  border-radius: 8px; padding: 5px 14px; font-size: .82rem; font-weight: 700;
+  color: var(--gold-dim); cursor: pointer; font-family: 'Nunito', sans-serif;
+  transition: background .15s, border-color .15s;
+}
+.timer-btn:hover { background: var(--bg-card2); border-color: var(--gold); color: var(--gold); }
+.timer-btn-restart { border-color: rgba(181,96,12,.4); }
+
 /* empty state */
 .q-empty {
   flex: 1; display: flex; flex-direction: column;
@@ -524,6 +560,24 @@ body {
         <button class="ll-btn" id="ll-50" onclick="use5050()"><span class="ll-icon">✂️</span>50:50</button>
         <button class="ll-btn" id="ll-cf" onclick="useCallFriend()"><span class="ll-icon">📞</span>Call Friend</button>
         <button class="ll-btn" id="ll-aa" onclick="useAskAudience()"><span class="ll-icon">👥</span>Ask Audience</button>
+      </div>
+
+      <!-- Timer -->
+      <div class="timer-wrap" id="timer-wrap">
+        <div class="timer-ring-wrap">
+          <svg class="timer-ring" viewBox="0 0 84 84">
+            <circle class="timer-track" cx="42" cy="42" r="36"/>
+            <circle class="timer-arc" id="timer-arc" cx="42" cy="42" r="36"/>
+          </svg>
+          <div class="timer-label" id="timer-display">3:00</div>
+        </div>
+        <div class="timer-info">
+          <div class="timer-title">⏱ Time Left</div>
+          <div class="timer-btns">
+            <button class="timer-btn" id="timer-toggle" onclick="toggleTimer()">⏸ Pause</button>
+            <button class="timer-btn timer-btn-restart" onclick="restartTimer()">🔄 Restart</button>
+          </div>
+        </div>
       </div>
 
       <div class="qcard" id="qcard">
@@ -928,6 +982,82 @@ function refreshTopbar() {
   document.getElementById('gp-done').textContent = done;
 }
 
+/* ===== TIMER ===== */
+const TIMER_TOTAL = 180;
+let T = { secs: TIMER_TOTAL, running: false, iv: null };
+
+function _timerEl(id) { return document.getElementById(id); }
+
+function updateTimerDisplay() {
+  const m = Math.floor(T.secs / 60);
+  const s = T.secs % 60;
+  const display = _timerEl('timer-display');
+  const arc     = _timerEl('timer-arc');
+  if (!display || !arc) return;
+  display.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  const frac = T.secs / TIMER_TOTAL;
+  arc.style.strokeDashoffset = (226.2 * (1 - frac)).toFixed(2);
+  const warn   = T.secs <= 60 && T.secs > 30;
+  const danger = T.secs <= 30;
+  const cls = danger ? ' danger' : warn ? ' warning' : '';
+  display.className = 'timer-label' + cls;
+  arc.className.baseVal = 'timer-arc' + cls;
+}
+
+function _timerTick() {
+  if (T.secs <= 0) {
+    clearInterval(T.iv); T.iv = null; T.running = false;
+    const tog = _timerEl('timer-toggle');
+    if (tog) tog.textContent = '▶ Resume';
+    const wrap = _timerEl('timer-wrap');
+    if (wrap) wrap.classList.add('time-up');
+    updateTimerDisplay();
+    return;
+  }
+  T.secs--;
+  updateTimerDisplay();
+}
+
+function startTimer() {
+  if (T.running) return;
+  T.running = true;
+  const tog = _timerEl('timer-toggle');
+  if (tog) tog.textContent = '⏸ Pause';
+  _timerEl('timer-wrap')?.classList.remove('time-up');
+  T.iv = setInterval(_timerTick, 1000);
+}
+
+function stopTimer() {
+  if (!T.running) return;
+  clearInterval(T.iv); T.iv = null; T.running = false;
+  const tog = _timerEl('timer-toggle');
+  if (tog) tog.textContent = '▶ Resume';
+}
+
+function toggleTimer() {
+  if (T.running) stopTimer(); else startTimer();
+}
+
+function restartTimer() {
+  clearInterval(T.iv); T.iv = null; T.running = false;
+  T.secs = TIMER_TOTAL;
+  _timerEl('timer-wrap')?.classList.remove('time-up');
+  updateTimerDisplay();
+  startTimer();
+}
+
+function resetTimerForNewQ(revealed) {
+  clearInterval(T.iv); T.iv = null; T.running = false;
+  T.secs = TIMER_TOTAL;
+  updateTimerDisplay();
+  const wrap = _timerEl('timer-wrap');
+  if (wrap) {
+    wrap.classList.remove('time-up');
+    wrap.style.display = revealed ? 'none' : '';
+  }
+  if (!revealed) startTimer();
+}
+
 /* ===== OPEN QUESTION ===== */
 function openQ(qi) {
   G.currentQ = qi;
@@ -939,6 +1069,9 @@ function showActualQ(qi) {
 
   document.getElementById('q-empty').hidden   = true;
   document.getElementById('q-content').hidden = false;
+
+  // Timer
+  resetTimerForNewQ(G.revealed[qi]);
 
   // Question text
   document.getElementById('qcat').textContent     = q.category;
@@ -1024,6 +1157,7 @@ function submitAnswer() {
   if (qi<0 || G.revealed[qi] || G.answers[qi]===null) return;
 
   G.revealed[qi] = true;
+  stopTimer();
   const q = QS[qi];
   const userAns = G.answers[qi];
   const correct  = q.correctAnswer;
