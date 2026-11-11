@@ -223,24 +223,17 @@ body {
 .ll-btn:disabled { opacity: .28; cursor: not-allowed; text-decoration: line-through; }
 .ll-icon { font-size: .95rem; }
 
-/* ===== TIMER (fixed right panel) ===== */
-.timer-wrap {
-  position: fixed; right: 1.2rem; top: 50%; transform: translateY(-50%);
-  z-index: 50;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  background: var(--bg-card2); border: 2px solid var(--opt-bdr);
-  border-radius: 18px; padding: 14px 10px; width: 112px;
-  box-shadow: 0 4px 24px rgba(181,96,12,.2);
+/* ===== TIMER (topbar) ===== */
+#timer-wrap {
+  display: flex; align-items: center; gap: 10px;
 }
-.timer-wrap.time-up { border-color: var(--bad); animation: timerFlash .4s ease-in-out 3; }
-@keyframes timerFlash { 0%,100%{background:var(--bg-card2)} 50%{background:#FFE0E0} }
-/* display:contents makes timer-info transparent — children flow into timer-wrap flex */
-.timer-info { display: contents; }
-.timer-ring-wrap { order: 2; position: relative; width: 72px; height: 72px; flex-shrink: 0; }
-.timer-ring { width: 72px; height: 72px; transform: rotate(-90deg); }
-.timer-track { fill: none; stroke: var(--opt-bdr); stroke-width: 7; opacity: .4; }
+#timer-wrap.time-up { animation: timerFlash .5s ease-in-out 4; }
+@keyframes timerFlash { 0%,100%{opacity:1} 50%{opacity:.25} }
+.timer-ring-wrap { position: relative; width: 48px; height: 48px; flex-shrink: 0; }
+.timer-ring { width: 48px; height: 48px; transform: rotate(-90deg); }
+.timer-track { fill: none; stroke: var(--opt-bdr); stroke-width: 6; opacity: .4; }
 .timer-arc {
-  fill: none; stroke: var(--gold-lt); stroke-width: 7;
+  fill: none; stroke: var(--gold-lt); stroke-width: 6;
   stroke-dasharray: 226.2; stroke-dashoffset: 0;
   stroke-linecap: round; transition: stroke-dashoffset .9s linear, stroke .4s;
 }
@@ -248,21 +241,19 @@ body {
 .timer-arc.danger  { stroke: var(--bad); }
 .timer-label {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold);
+  font-family: 'Cinzel', serif; font-size: .78rem; font-weight: 700; color: var(--gold);
 }
 .timer-label.warning { color: #E05000; }
 .timer-label.danger  { color: var(--bad); }
-.timer-title { order: 1; font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 700; color: var(--gold-dim); letter-spacing: .04em; text-align: center; }
-.timer-btns { order: 3; display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.timer-btns { display: flex; gap: 5px; }
 .timer-btn {
-  width: 100%; text-align: center;
-  background: var(--bg-card); border: 1.5px solid var(--opt-bdr);
-  border-radius: 8px; padding: 5px 6px; font-size: .75rem; font-weight: 700;
+  background: none; border: 1.5px solid var(--opt-bdr);
+  border-radius: 6px; padding: 3px 9px; font-size: .75rem; font-weight: 700;
   color: var(--gold-dim); cursor: pointer; font-family: 'Nunito', sans-serif;
-  transition: background .15s, border-color .15s;
+  transition: background .15s, border-color .15s; white-space: nowrap;
 }
 .timer-btn:hover { background: var(--bg-card2); border-color: var(--gold); color: var(--gold); }
-.timer-btn-restart { border-color: rgba(181,96,12,.4); }
+.timer-btn-restart { border-color: rgba(181,96,12,.35); }
 
 /* empty state */
 .q-empty {
@@ -587,6 +578,19 @@ body {
     <!-- Top bar -->
     <div class="game-topbar">
       <div class="game-brand">🪔 KBDP</div>
+      <div id="timer-wrap" style="display:none">
+        <div class="timer-ring-wrap">
+          <svg class="timer-ring" viewBox="0 0 84 84">
+            <circle class="timer-track" cx="42" cy="42" r="36"/>
+            <circle class="timer-arc" id="timer-arc" cx="42" cy="42" r="36"/>
+          </svg>
+          <div class="timer-label" id="timer-display">3:00</div>
+        </div>
+        <div class="timer-btns">
+          <button class="timer-btn" id="timer-toggle" onclick="toggleTimer()">⏸ Pause</button>
+          <button class="timer-btn timer-btn-restart" onclick="restartTimer()">🔄 Restart</button>
+        </div>
+      </div>
       <div class="game-progress"><span id="gp-done">0</span> / 10 answered</div>
     </div>
 
@@ -606,23 +610,6 @@ body {
         <button class="ll-btn" id="ll-aa" onclick="useAskAudience()"><span class="ll-icon">👥</span>Ask Audience</button>
       </div>
 
-      <!-- Timer -->
-      <div class="timer-wrap" id="timer-wrap">
-        <div class="timer-ring-wrap">
-          <svg class="timer-ring" viewBox="0 0 84 84">
-            <circle class="timer-track" cx="42" cy="42" r="36"/>
-            <circle class="timer-arc" id="timer-arc" cx="42" cy="42" r="36"/>
-          </svg>
-          <div class="timer-label" id="timer-display">3:00</div>
-        </div>
-        <div class="timer-info">
-          <div class="timer-title">⏱ Time Left</div>
-          <div class="timer-btns">
-            <button class="timer-btn" id="timer-toggle" onclick="toggleTimer()">⏸ Pause</button>
-            <button class="timer-btn timer-btn-restart" onclick="restartTimer()">🔄 Restart</button>
-          </div>
-        </div>
-      </div>
 
       <div class="qcard" id="qcard">
         <div class="qcat" id="qcat"></div>
