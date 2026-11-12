@@ -72,34 +72,35 @@ body {
 }
 .logo {
   font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1.4rem, 3.6vw, 2.6rem); font-weight: 900; line-height: 1.2;
+  font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 900; line-height: 1.2;
   white-space: nowrap;
   background: linear-gradient(120deg, #5C2200, #B5600C, #E89010, #B5600C, #5C2200);
   background-size: 300% auto;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: shimmer 4s linear infinite;
 }
-.logo-sub { font-family: 'Cinzel', serif; color: var(--saffron); font-size: clamp(.8rem,2vw,1rem); letter-spacing: .2em; text-transform: uppercase; }
+.logo-sub { font-family: 'Cinzel', serif; color: var(--saffron); font-size: clamp(.9rem,2.2vw,1.2rem); letter-spacing: .2em; text-transform: uppercase; }
 .welcome-mid {
   display: flex; align-items: center; justify-content: center;
-  gap: 1.6rem; width: 100%; max-width: 780px; flex-wrap: wrap;
+  gap: 1.6rem; width: 100%; max-width: 1020px; flex-wrap: wrap;
 }
 .welcome-card {
-  flex: 1; min-width: 280px; max-width: 440px;
+  flex: 1; min-width: 280px; max-width: 700px;
   background: linear-gradient(135deg, var(--bg-card), var(--bg-card2));
   border: 2px solid var(--gold-dim); border-radius: 20px;
   padding: 1.4rem 1.6rem;
   box-shadow: 0 4px 32px rgba(181,96,12,.12);
   animation: glow 3s ease-in-out infinite;
 }
-.welcome-card h2 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.1rem; margin-bottom: .7rem; }
-.rules { list-style: none; color: var(--text-dim); font-size: .9rem; line-height: 2; text-align: left; }
+.welcome-card h2 { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.45rem; margin-bottom: .7rem; }
+.rules { list-style: none; color: var(--text-dim); font-size: 1.15rem; line-height: 2; text-align: left; }
+@media (min-width: 900px) { .rules li { white-space: nowrap; } }
 .rules li::before { content: '🪔  '; }
 .btn-play {
   font-family: 'Cinzel', serif;
   background: linear-gradient(135deg, #8A4200, #E89010, #8A4200);
   color: #FFF8EE; border: none; padding: .9rem 2.8rem; border-radius: 50px;
-  font-size: 1.15rem; font-weight: 700; cursor: pointer; letter-spacing: .1em; text-transform: uppercase;
+  font-size: 1.35rem; font-weight: 700; cursor: pointer; letter-spacing: .1em; text-transform: uppercase;
   box-shadow: 0 4px 24px rgba(181,96,12,.4); transition: transform .2s, box-shadow .2s;
 }
 .btn-play:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 36px rgba(181,96,12,.55); }
@@ -121,7 +122,7 @@ body {
 }
 .host-label {
   font-family: 'Cinzel', serif; color: var(--gold);
-  font-size: .9rem; font-weight: 700; letter-spacing: .07em;
+  font-size: 1.05rem; font-weight: 700; letter-spacing: .07em;
 }
 
 /* ======== GAME LAYOUT ======== */
