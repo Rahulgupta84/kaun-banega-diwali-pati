@@ -270,6 +270,7 @@ body {
 .qcat { font-size: .67rem; color: var(--saffron); text-transform: uppercase; letter-spacing: .15em; font-weight: 800; margin-bottom: .3rem; }
 .qnum-row { font-family: 'Cinzel', serif; font-size: .72rem; color: var(--gold-dim); margin-bottom: .5rem; }
 .qtext { font-size: clamp(.9rem,2.5vw,1.1rem); font-weight: 700; line-height: 1.55; color: var(--cream); }
+.qimg { display: block; width: 100%; max-height: 280px; object-fit: cover; border-radius: 12px; margin-top: .8rem; }
 
 /* options */
 .opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: .9rem; }
@@ -602,6 +603,7 @@ body {
         <div class="qcat" id="qcat"></div>
         <div class="qnum-row" id="qnum-row"></div>
         <div class="qtext" id="qtext"></div>
+        <img class="qimg" id="qimg" alt="" hidden>
       </div>
 
       <div class="opts-grid" id="opts-grid">
@@ -694,6 +696,7 @@ const QS = [
     funFact:"Narakasura, the demon king of Pragjyotishpura, had imprisoned 16,000 women. Krishna and Satyabhama attacked together — with Satyabhama reportedly delivering the killing blow! Their victory is celebrated as Choti Diwali the day before the main festival." },
   { id:6, category:"Mythology",
     question:"What is the name of Lord Indra's elephant?",
+    image:"airavata.jpg", imageAlt:"A white winged elephant with golden ornaments flying over snowy mountains",
     options:["Uchchaihshravas","Airavata","Gajendra","Supratika"], correctAnswer:1,
     funFact:"Airavata, the majestic white elephant, rose from the ocean during the Samudra Manthan — the same churning that brought forth Goddess Lakshmi, whom we worship on Diwali! Uchchaihshravas, the seven-headed horse, emerged from that churning too." },
   { id:7, category:"Mythology",
@@ -705,7 +708,7 @@ const QS = [
     options:["Lord Brahma","Lord Indra","Lord Vishnu","Lord Kubera"], correctAnswer:2,
     funFact:"The Sharang (Vishnu's bow) was supreme — even beyond Shiva's bow. When Parashuram arrived with it, everyone expected a great battle, but Ram effortlessly strung it in an instant. A stunned Parashuram bowed and recognised Ram as Vishnu's avatar, his life's mission complete!" },
   { id:9, category:"Traditions",
-    question:"What is the first day of the five-day Diwali festival called, when people buy gold for good luck?",
+    question:"What is the first day of Diwali called?",
     options:["Dhanteras","Naraka Chaturdashi","Kartik Amavasya","Bhai Dooj"], correctAnswer:0,
     funFact:"Dhanteras (Dhan = wealth, Teras = 13th) falls two days before Diwali. Buying gold or silver utensils is considered extremely auspicious — it's the busiest day for jewellers in India!" },
   { id:10, category:"History & Religion",
@@ -1115,6 +1118,11 @@ function showActualQ(qi) {
   document.getElementById('qcat').textContent     = q.category;
   document.getElementById('qnum-row').textContent  = `Question ${qi+1} of 10 — ${HAPPINESS[qi]}`;
   document.getElementById('qtext').textContent     = q.question;
+
+  // Optional picture for the question
+  const qimg = document.getElementById('qimg');
+  if (q.image) { qimg.src = q.image; qimg.alt = q.imageAlt || ''; qimg.hidden = false; }
+  else { qimg.removeAttribute('src'); qimg.hidden = true; }
 
   // Options
   for (let i=0;i<4;i++) {
